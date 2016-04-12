@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
+    android:paddingRight="5dp"
+    android:paddingLeft="5dp"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/add_car_car_model"
+        android:hint="Car model"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/add_car_body_type"
+        android:hint="Body type"
+        android:enabled="false"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <RadioGroup
+        android:id="@+id/add_car_body_type_radio_button"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/add_car_body_type_campvan"
+            android:drawableLeft="@drawable/ic_campvan"
+            android:text="Campvan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <RadioButton
+            android:id="@+id/add_car_body_type_convertible"
+            android:drawableLeft="@drawable/ic_convertible"
+            android:text="Convertible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <RadioButton
+            android:id="@+id/add_car_body_type_suv"
+            android:drawableLeft="@drawable/ic_suv"
+            android:text="Sports Utiltity Vehicle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <RadioButton
+            android:id="@+id/add_car_body_type_sedan"
+            android:drawableLeft="@drawable/ic_sedan"
+            android:text="Sedan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <RadioButton
+            android:id="@+id/add_car_body_type_shuttle"
+            android:drawableLeft="@drawable/ic_shuttle"
+            android:text="Shuttle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RadioGroup>
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/add_car_body_paint"
+        android:hint="Body paint"
+        android:enabled="false"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <View
+        android:id="@+id/add_car_body_paint_color_box"
+        android:layout_marginRight="5dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"/>
+    <SeekBar
+        android:id="@+id/add_car_body_paint_red"
+        android:layout_margin="2dp"
+        android:max="255"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <SeekBar
+        android:id="@+id/add_car_body_paint_green"
+        android:layout_margin="2dp"
+        android:max="255"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <SeekBar
+        android:id="@+id/add_car_body_paint_blue"
+        android:layout_margin="2dp"
+        android:max="255"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/add_car_mileage"
+        android:hint="Mileage"
+        android:inputType="number"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/add_car_other_description"
+        android:hint="Other description"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
+</ScrollView>
+</LinearLayout>

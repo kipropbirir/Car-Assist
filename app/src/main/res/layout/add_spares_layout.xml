@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
+    android:paddingRight="16dp"
+    android:paddingLeft="16dp"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/add_spares_name"
+        android:hint="Name"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/add_spares_description"
+        android:hint="Description"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/add_spares_price"
+        android:hint="Price"
+        android:inputType="number"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/add_spares_location"
+        android:hint="Location"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/add_spares_add_photo_button"
+            android:drawableLeft="@android:drawable/ic_menu_camera"
+            android:text="ADD PHOTO"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/add_spares_photo"
+            android:layout_marginLeft="8dp"
+            android:hint="Photo"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/colorPrimary"
+            android:layout_weight="1"
+            android:layout_toRightOf="@id/add_spares_add_photo_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+    <Button
+        android:id="@+id/add_spares_save_button"
+        android:layout_marginTop="16dp"
+        android:background="#00000000"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/colorAccent"
+        android:text="SAVE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
+</ScrollView>
+</android.support.v7.widget.CardView>
+</LinearLayout>
