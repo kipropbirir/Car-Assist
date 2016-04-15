@@ -27,29 +27,55 @@ public class SparesProfileArrayAdapter extends ArrayAdapter<Spares> {
 
     public SparesProfileArrayAdapter(Context context, ArrayList<Spares> items){
 
-        super(context,R.layout.spares_profile_list_layout,items);
+        super(context, R.layout.spares_profile_list_layout, items);
         this.context = context;
         this.items = items;
+
+    }
+
+    static class ViewHolder{
+
+        public TextView sparesName;
+        public TextView sparesDescription;
+        public TextView sparesPrice;
+        public TextView sparesLocation;
+        public CircleImageView sparesImage;
 
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.spares_profile_list_layout,parent,false);
+        View rowView = convertView;
 
-        TextView sparesName = (TextView)rowView.findViewById(R.id.spares_product_name);
-        TextView sparesDescription = (TextView)rowView.findViewById(R.id.spares_product_description);
-        TextView sparesPrice = (TextView)rowView.findViewById(R.id.spares_product_price);
-        TextView sparesLocation = (TextView)rowView.findViewById(R.id.spares_product_location);
-        CircleImageView sparesImage = (CircleImageView)rowView.findViewById(R.id.spares_image);
+        //reuse view
+        if(rowView == null){
 
-        sparesName.setText(items.get(position).getName());
-        sparesDescription.setText(items.get(position).getDescription());
-        sparesPrice.setText(items.get(position).getPrice());
-        sparesLocation.setText(items.get(position).getLocation());
-        sparesImage.setImageBitmap(decodeImage(items.get(position).getPic()));
+            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            rowView = inflater.inflate(R.layout.spares_profile_list_layout,parent,false);
+
+            //configure view holder
+            ViewHolder viewHolder = new ViewHolder();
+
+            viewHolder.sparesName = (TextView)rowView.findViewById(R.id.spares_product_name);
+            viewHolder.sparesDescription = (TextView)rowView.findViewById(R.id.spares_product_description);
+            viewHolder.sparesPrice = (TextView)rowView.findViewById(R.id.spares_product_price);
+            viewHolder.sparesLocation = (TextView)rowView.findViewById(R.id.spares_product_location);
+            viewHolder.sparesImage = (CircleImageView)rowView.findViewById(R.id.spares_image);
+            rowView.setTag(viewHolder);
+
+        }
+
+        ViewHolder holder = (ViewHolder)rowView.getTag();
+
+        holder.sparesName.setText(items.get(position).getName());
+        holder.sparesDescription.setText(items.get(position).getDescription());
+        holder.sparesPrice.setText(items.get(position).getPrice());
+        holder.sparesLocation.setText(items.get(position).getLocation());
+        //checks if image string is empty
+        if(!(items.get(position).getPic().equalsIgnoreCase(""))) {
+            holder.sparesImage.setImageBitmap(decodeImage(items.get(position).getPic()));
+        }
 
         return rowView;
     }

@@ -46,6 +46,7 @@ import java.io.IOException;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    //create an instance of the firebase database
     Firebase mRef = new Firebase("https://car-assist.firebaseio.com/");
 
     Spares spares = new Spares();
@@ -82,12 +83,11 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        //listen to the click of the FloatingActionButton
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                //      .setAction("Action", null).show();
-
+                //checks the selected category and navigates to the appropriate activity (screen)
                 if (category.equalsIgnoreCase("spares")) {
                     //sparesDialog();
                     Intent intent = new Intent(getApplicationContext(),AddSparesActivity.class);
@@ -203,6 +203,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
+                //convert rgb color to hexadecimal
                 String colorHex = String.format("#%02x%02x%02x",redSeekBar.getProgress(),greenSeekBar.getProgress(),blueSeekBar.getProgress());
 
                 //initialize dialog views
@@ -315,18 +316,6 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public String convertBitmap(Bitmap bitmap){
-        String imageFile="";
-
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        bitmap.recycle();
-        byte[] byteArray = stream.toByteArray();
-        imageFile = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
-        return imageFile;
     }
 
 }

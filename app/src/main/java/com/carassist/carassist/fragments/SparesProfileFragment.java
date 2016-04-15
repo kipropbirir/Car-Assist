@@ -1,5 +1,6 @@
 package com.carassist.carassist.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -64,10 +65,15 @@ public class SparesProfileFragment extends Fragment {
         LinearLayout linearLayout = (LinearLayout)rootView.findViewById(R.id.fragment_spares_profile_empty_state);
         ListView listView = (ListView)rootView.findViewById(R.id.fragment_spares_profile_list_view);
 
-        //items.add(new Spares("name","pic","price","location","","",""));
         listView.setAdapter(sparesProfileArrayAdapter);
 
         linearLayout.setVisibility(View.GONE);
+
+        //add footer to the listView
+        LayoutInflater layoutInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View footerView = layoutInflater.inflate(R.layout.listview_footer,null);
+
+        listView.addFooterView(footerView);
 
         return rootView;
     }

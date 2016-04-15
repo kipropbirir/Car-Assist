@@ -30,41 +30,67 @@ public class DriverProfileArrayAdapter extends ArrayAdapter<Cars> {
 
     }
 
+    static class ViewHolder{
+
+        public TextView carName;
+        public TextView carBodyName;
+        public TextView carMileage;
+        public TextView carDescription;
+        public ImageView carBodyImage;
+        public View carBodyPaint;
+
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.driver_profile_list_layout,parent,false);
 
-        TextView carName = (TextView)rowView.findViewById(R.id.driver_car_name);
-        TextView carBodyName = (TextView)rowView.findViewById(R.id.driver_car_body_name);
-        TextView carMileage = (TextView)rowView.findViewById(R.id.driver_car_mileage);
-        TextView carDescription = (TextView)rowView.findViewById(R.id.driver_car_description);
-        ImageView carBodyImage = (ImageView)rowView.findViewById(R.id.driver_car_body_image);
-        View carBodyPaint = rowView.findViewById(R.id.driver_car_body_paint);
+        View rowView = convertView;
 
-        carName.setText(items.get(position).getCarModel());
-        carBodyName.setText(items.get(position).getBodyType());
-        carMileage.setText(items.get(position).getMileage()+" km");
-        carDescription.setText(items.get(position).getDescription());
-        //carBodyPaint.setBackgroundColor(Color.parseColor(items.get(position).getBodyPaint()));
+        //reuse views
+        if(rowView == null){
+
+            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            rowView = inflater.inflate(R.layout.driver_profile_list_layout,parent,false);
+
+            //configure view holder
+            ViewHolder viewHolder = new ViewHolder();
+
+            viewHolder.carName = (TextView)rowView.findViewById(R.id.driver_car_name);
+            viewHolder.carBodyName = (TextView)rowView.findViewById(R.id.driver_car_body_name);
+            viewHolder.carMileage = (TextView)rowView.findViewById(R.id.driver_car_mileage);
+            viewHolder.carDescription = (TextView)rowView.findViewById(R.id.driver_car_description);
+            viewHolder.carBodyImage = (ImageView)rowView.findViewById(R.id.driver_car_body_image);
+            viewHolder.carBodyPaint = rowView.findViewById(R.id.driver_car_body_paint);
+            rowView.setTag(viewHolder);
+
+        }
+
+        //fill data
+        ViewHolder holder = (ViewHolder)rowView.getTag();
+
+        holder.carName.setText(items.get(position).getCarModel());
+        holder.carBodyName.setText(items.get(position).getBodyType());
+        holder.carMileage.setText(items.get(position).getMileage()+" km");
+        holder.carDescription.setText(items.get(position).getDescription());
+        holder.carBodyPaint.setBackgroundColor(Color.parseColor(items.get(position).getBodyPaint()));
 
         String bodyType = items.get(position).getBodyType();
 
         switch(bodyType){
             case "Campvan":
-                carBodyImage.setImageResource(R.drawable.ic_campvan);
+                holder.carBodyImage.setImageResource(R.drawable.ic_campvan);
                 break;
             case "Convertible":
-                carBodyImage.setImageResource(R.drawable.ic_convertible);
+                holder.carBodyImage.setImageResource(R.drawable.ic_convertible);
                 break;
             case "Sports Utility Vehicle":
-                carBodyImage.setImageResource(R.drawable.ic_suv);
+                holder.carBodyImage.setImageResource(R.drawable.ic_suv);
                 break;
             case "Sedan":
-                carBodyImage.setImageResource(R.drawable.ic_sedan);
+                holder.carBodyImage.setImageResource(R.drawable.ic_sedan);
                 break;
             case "Shuttle":
-                carBodyImage.setImageResource(R.drawable.ic_shuttle);
+                holder.carBodyImage.setImageResource(R.drawable.ic_shuttle);
                 break;
             default:
                 break;

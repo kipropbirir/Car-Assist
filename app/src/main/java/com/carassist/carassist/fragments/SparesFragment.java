@@ -1,5 +1,6 @@
 package com.carassist.carassist.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -51,6 +52,7 @@ public class SparesFragment extends Fragment {
                     Spares spares = postSnapshot.getValue(Spares.class);
                     items.add(spares);
                 }
+
                 sparesArrayAdapter.notifyDataSetChanged();
             }
 
@@ -63,6 +65,12 @@ public class SparesFragment extends Fragment {
         });
 
         listView.setAdapter(sparesArrayAdapter);
+
+        //add footer to the listView
+        LayoutInflater layoutInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View footerView = layoutInflater.inflate(R.layout.listview_footer,null);
+
+        listView.addFooterView(footerView);
 
         return rootView;
     }
