@@ -2,10 +2,13 @@ package com.carassist.carassist.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -39,14 +42,16 @@ public class DriverProfileFragment extends Fragment {
         driverProfileArrayAdapter = new DriverProfileArrayAdapter(getActivity(),items);
 
         Firebase driverRef = mRef.child("cars");
-        //Query queryRef = driverRef.orderByChild("uniqueId").equalTo(mRef.getAuth().getUid());
+        Query queryRef = driverRef.orderByChild("uniqueId").equalTo(mRef.getAuth().getUid());
 
         LinearLayout linearLayout = (LinearLayout)rootView.findViewById(R.id.fragment_driver_profile_empty_state);
         ListView listView = (ListView)rootView.findViewById(R.id.fragment_driver_profile_list_view);
 
-        driverRef.addValueEventListener(new ValueEventListener() {
+        queryRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                //remove all items in the ArrayList
+                items.clear();
 
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
 
@@ -65,11 +70,44 @@ public class DriverProfileFragment extends Fragment {
             }
         });
 
-        //items.add(new Cars("name", "color", "mileage", "description", "pic", "", ""));
-
         listView.setAdapter(driverProfileArrayAdapter);
 
         linearLayout.setVisibility(View.GONE);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                final Firebase deleteSparesRef = mRef.child("cars").child(items.get(position).getPushId());
+
+                ImageView delete = (ImageView)view.findViewById(R.id.driver_delete);
+                ImageView edit = (ImageView)view.findViewById(R.id.driver_edit);
+
+                delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        deleteSparesRef.setValue(null, new Firebase.CompletionListener() {
+                            @Override
+                            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+
+
+                                if(firebaseError == null){
+                                    //item deleted successfully
+                                    Snackbar.make(v, "item has been deleted", Snackbar.LENGTH_SHORT).show();
+                                    driverProfileArrayAdapter.notifyDataSetChanged();
+
+                                }else{
+                                    //an error occurred
+                                    Snackbar.make(v,"an error occurred, try again",Snackbar.LENGTH_SHORT).show();
+                                }
+
+                            }
+                        });
+                    }
+                });
+
+            }
+        });
 
         return rootView;
     }

@@ -1,5 +1,7 @@
 package com.carassist.carassist.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -47,11 +49,16 @@ public class GarageOwnerFragment extends Fragment {
         mRef.child("garage").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                //remove all items in the ArrayList
+                items.clear();
+
                 for(DataSnapshot postSnapshot: dataSnapshot.getChildren()){
                     Garage garage = postSnapshot.getValue(Garage.class);
                     items.add(garage);
                 }
+
                 garageArrayAdapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -91,4 +98,26 @@ public class GarageOwnerFragment extends Fragment {
 
         return rootView;
     }
+
+    public void writeToSharedPreference(int value){
+
+        //add value to SharedPreferences local storage
+        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("NUMBER OF ITEMS",value);
+        editor.commit();
+
+    }
+
+    public int readFromSharedPreference(){
+        int value = 0;
+
+        //read value stored in SharedPreferences local storage
+
+        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        value = sharedPreferences.getInt("NUMBER OF ITEMS",0);
+
+        return value;
+    }
+
 }

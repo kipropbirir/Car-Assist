@@ -81,7 +81,7 @@ public class SparesArrayAdapter extends ArrayAdapter<Spares> {
             holder.sparesImage.setImageBitmap(decodeImage(items.get(position).getPic()));
         }
         holder.tagGroup.setTags(new String[]{"NEW"});
-        //tagGroup.setVisibility(View.GONE);
+        holder.tagGroup.setVisibility(View.GONE);
 
         return rowView;
     }

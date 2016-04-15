@@ -66,6 +66,7 @@ public class GarageArrayAdapter extends ArrayAdapter<Garage> {
         holder.garageDescription.setText(items.get(position).getDescription());
         holder.garageLocation.setText(items.get(position).getLocation());
         holder.tagGroup.setTags(new String[]{"NEW"});
+        holder.tagGroup.setVisibility(View.GONE);
 
         return rowView;
     }

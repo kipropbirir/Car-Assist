@@ -70,7 +70,7 @@ public class SparesProfileArrayAdapter extends ArrayAdapter<Spares> {
 
         holder.sparesName.setText(items.get(position).getName());
         holder.sparesDescription.setText(items.get(position).getDescription());
-        holder.sparesPrice.setText(items.get(position).getPrice());
+        holder.sparesPrice.setText("ksh." + items.get(position).getPrice());
         holder.sparesLocation.setText(items.get(position).getLocation());
         //checks if image string is empty
         if(!(items.get(position).getPic().equalsIgnoreCase(""))) {
