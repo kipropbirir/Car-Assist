@@ -36,6 +36,7 @@ import com.carassist.carassist.data.Garage;
 import com.carassist.carassist.data.Spares;
 import com.carassist.carassist.fragments.DriverProfileFragment;
 import com.carassist.carassist.fragments.GarageOwnerProfileFragment;
+import com.carassist.carassist.fragments.MyProfileFragment;
 import com.carassist.carassist.fragments.SparesProfileFragment;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -53,11 +54,13 @@ public class ProfileActivity extends AppCompatActivity {
     String category = "";
     private int PICK_IMAGE_REQUEST = 1;
     Bitmap bitmap;
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -66,23 +69,30 @@ public class ProfileActivity extends AppCompatActivity {
 
         switch(category){
             case "spares":
+                fab.setVisibility(View.VISIBLE);
                 getSupportActionBar().setTitle("Spares");
                 setFragment(new SparesProfileFragment());
                 break;
             case "garage":
+                fab.setVisibility(View.VISIBLE);
                 getSupportActionBar().setTitle("Garage");
                 setFragment(new GarageOwnerProfileFragment());
                 break;
             case "driver":
+                fab.setVisibility(View.VISIBLE);
                 getSupportActionBar().setTitle("Driver");
                 setFragment(new DriverProfileFragment());
+                break;
+            case "myProfile":
+                fab.setVisibility(View.GONE);
+                getSupportActionBar().setTitle("My Profile");
+                setFragment(new MyProfileFragment());
                 break;
             default:
                 setFragment(null);
                 break;
         }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         //listen to the click of the FloatingActionButton
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

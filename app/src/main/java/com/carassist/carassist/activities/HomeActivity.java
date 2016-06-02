@@ -7,10 +7,14 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -18,19 +22,42 @@ import android.widget.Toast;
 
 import com.carassist.carassist.R;
 import com.carassist.carassist.adapters.HomeViewPagerFragmentAdapter;
+import com.carassist.carassist.data.AuthCredentials;
+import com.carassist.carassist.data.Garage;
+import com.carassist.carassist.fragments.DriverFragment;
+import com.carassist.carassist.fragments.GarageOwnerFragment;
+import com.carassist.carassist.fragments.SparesFragment;
 import com.firebase.client.AuthData;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.github.badoualy.morphytoolbar.MorphyToolbar;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.special.ResideMenu.ResideMenu;
 import com.special.ResideMenu.ResideMenuItem;
 
-public class HomeActivity extends AppCompatActivity {
+import net.rehacktive.waspdb.WaspDb;
+import net.rehacktive.waspdb.WaspFactory;
+import net.rehacktive.waspdb.WaspHash;
+
+public class HomeActivity extends AppCompatActivity{
 
     MorphyToolbar morphyToolbar;
     ViewPager viewPager;
     ResideMenu resideMenu;
     ResideMenuItem myProfile,driverProfile,garageProfile,sparesProfile,logOut;
     TabLayout tabLayout;
+    MaterialSearchView materialSearchView;
+    HomeViewPagerFragmentAdapter viewPagerAdapter;
+
+    String path;
+    String databaseName;
+    String password;
+    WaspDb db;
+    WaspHash userDetails;
+
+    GarageOwnerFragment garageOwnerFragment;
 
     Firebase mRef = new Firebase("https://car-assist.firebaseio.com/");
 
@@ -38,8 +65,17 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        path = getFilesDir().getPath();
+        databaseName = "Car Assist DB";
+        password = "qwertyuiop";
+        db = WaspFactory.openOrCreateDatabase(path,databaseName,password);
+        userDetails = db.openOrCreateHash("userDetails");
+
+        garageOwnerFragment = new GarageOwnerFragment();
         tabLayout = (TabLayout)findViewById(R.id.home_tab);
         viewPager = (ViewPager)findViewById(R.id.home_view_pager);
+        materialSearchView = (MaterialSearchView)findViewById(R.id.activity_home_search_view);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         morphyToolbar = MorphyToolbar.builder(this,toolbar)
                 .withToolbarAsSupportActionBar()
@@ -49,7 +85,9 @@ public class HomeActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        viewPager.setAdapter(new HomeViewPagerFragmentAdapter(getSupportFragmentManager()));
+        viewPagerAdapter = new HomeViewPagerFragmentAdapter(getSupportFragmentManager());
+
+        viewPager.setAdapter(viewPagerAdapter);
 
         tabLayout.setupWithViewPager(viewPager);
 
@@ -96,8 +134,8 @@ public class HomeActivity extends AppCompatActivity {
         driverProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),ProfileActivity.class);
-                intent.putExtra("PROFILECATEGORY","driver");
+                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                intent.putExtra("PROFILECATEGORY", "driver");
                 startActivity(intent);
             }
         });
@@ -117,6 +155,14 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        myProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),ProfileActivity.class);
+                intent.putExtra("PROFILECATEGORY","myProfile");
+                startActivity(intent);
+            }
+        });
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,6 +174,76 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        //search event listeners
+        materialSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                switch(viewPager.getCurrentItem()){
+                    case 0:
+                        DriverFragment driverFragment = (DriverFragment)viewPager.getAdapter().instantiateItem(viewPager, viewPager.getCurrentItem());
+                        break;
+                    case 1:
+                        GarageOwnerFragment garageOwnerFragment = (GarageOwnerFragment)viewPager.getAdapter().instantiateItem(viewPager, viewPager.getCurrentItem());
+                        garageOwnerFragment.listByName(query);
+                        break;
+                    case 2:
+                        SparesFragment sparesFragment = (SparesFragment)viewPager.getAdapter().instantiateItem(viewPager, viewPager.getCurrentItem());
+                        sparesFragment.listByName(query);
+                        break;
+                    default:
+                        break;
+                }
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        materialSearchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+
+            }
+        });
+
+        mRef.child("users").child(mRef.getAuth().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                AuthCredentials authCredentials = dataSnapshot.getValue(AuthCredentials.class);
+                userDetails.put("name", authCredentials.getName());
+                userDetails.put("userName", authCredentials.getUsername());
+                userDetails.put("email", authCredentials.getEmail());
+                userDetails.put("phoneNumber", authCredentials.getPhoneNumber());
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //inflate the menu items
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.analytics_items, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.search);
+        materialSearchView.setMenuItem(menuItem);
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -136,6 +252,28 @@ public class HomeActivity extends AppCompatActivity {
         switch(item.getItemId()){
             case android.R.id.home:
                 resideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
+                return true;
+            case R.id.sort_by_price_high_to_low:
+                //sort the items according to price from highest to lowest
+                switch(viewPager.getCurrentItem()){
+                    case 2:
+                        SparesFragment sparesFragment = (SparesFragment)viewPager.getAdapter().instantiateItem(viewPager, viewPager.getCurrentItem());
+                        sparesFragment.sortFromHighToLow();
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            case R.id.sort_by_price_low_to_high:
+                //sort the items according to price from lowest to highest
+                switch(viewPager.getCurrentItem()){
+                    case 2:
+                        SparesFragment sparesFragment = (SparesFragment)viewPager.getAdapter().instantiateItem(viewPager,viewPager.getCurrentItem());
+                        sparesFragment.sortFromLowToHigh();
+                        break;
+                    default:
+                        break;
+                }
                 return true;
         }
 

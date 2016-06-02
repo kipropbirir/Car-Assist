@@ -31,16 +31,18 @@ import java.util.ArrayList;
 public class GarageOwnerFragment extends Fragment {
 
     ListView listView;
-    ArrayList<Garage> items = new ArrayList<>();
+    ArrayList<Garage> items;
 
     Firebase mRef = new Firebase("https://car-assist.firebaseio.com/");
 
-    GarageArrayAdapter garageArrayAdapter;
+    public GarageArrayAdapter garageArrayAdapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_garage,container,false);
+
+        items = new ArrayList<>();
 
         garageArrayAdapter = new GarageArrayAdapter(getActivity(),items);
 
@@ -69,16 +71,14 @@ public class GarageOwnerFragment extends Fragment {
             }
         });
 
-        //items.add(new Garage("AutoPorts Garage", "We offer services for BMW and VW", "Juja,Kiambu", "", ""));
-
         listView.setAdapter(garageArrayAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                ImageView call = (ImageView)view.findViewById(R.id.garage_call);
-                ImageView locate = (ImageView)view.findViewById(R.id.garage_locate);
+                ImageView call = (ImageView) view.findViewById(R.id.garage_call);
+                ImageView locate = (ImageView) view.findViewById(R.id.garage_locate);
 
                 call.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -95,6 +95,7 @@ public class GarageOwnerFragment extends Fragment {
                 });
             }
         });
+
 
         return rootView;
     }
@@ -118,6 +119,20 @@ public class GarageOwnerFragment extends Fragment {
         value = sharedPreferences.getInt("NUMBER OF ITEMS",0);
 
         return value;
+    }
+
+    public void listByName(String name){
+        ArrayList<Garage> filteredItems = new ArrayList<>();
+
+        for(Garage garage:items){
+            if(garage.getName().equalsIgnoreCase(name) || garage.getLocation().equalsIgnoreCase(name)){
+                filteredItems.add(garage);
+            }
+        }
+        items.clear();
+        items.addAll(filteredItems);
+        garageArrayAdapter.notifyDataSetChanged();
+
     }
 
 }

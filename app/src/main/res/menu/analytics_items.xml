@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/sort_by_price_low_to_high"
+        app:showAsAction="never"
+        android:title="sort by price(low to high)"/>
+
+    <item
+        android:id="@+id/sort_by_price_high_to_low"
+        app:showAsAction="never"
+        android:title="sort by price(high to low)"/>
+
+    <item
+        android:id="@+id/search"
+        android:title="search by location or name"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="always"
+        android:orderInCategory="100"/>
+
+</menu>

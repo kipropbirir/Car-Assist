@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.carassist.carassist.R;
+import com.carassist.carassist.activities.GlobalApplication;
 import com.carassist.carassist.adapters.DriverProfileArrayAdapter;
 import com.carassist.carassist.data.Cars;
 import com.firebase.client.DataSnapshot;
@@ -20,6 +21,8 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
+
+import net.rehacktive.waspdb.WaspHash;
 
 import java.util.ArrayList;
 

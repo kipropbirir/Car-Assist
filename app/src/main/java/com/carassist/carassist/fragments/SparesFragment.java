@@ -29,6 +29,8 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -80,7 +82,7 @@ public class SparesFragment extends Fragment {
 
         //add footer to the listView
         LayoutInflater layoutInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View footerView = layoutInflater.inflate(R.layout.listview_footer,null);
+        View footerView = layoutInflater.inflate(R.layout.listview_footer, null);
 
         listView.addFooterView(footerView);
 
@@ -135,25 +137,54 @@ public class SparesFragment extends Fragment {
 
     }
 
-    public void writeToSharedPreference(int value){
+    public void listByName(String name){
+        ArrayList<Spares> filteredItems = new ArrayList<>();
 
-        //add value to SharedPreferences local storage
-        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("NUMBER OF ITEMS",value);
-        editor.commit();
+        for(Spares spares:items){
+            if(spares.getName().equalsIgnoreCase(name) || spares.getLocation().equalsIgnoreCase(name)){
+                filteredItems.add(spares);
+            }
+        }
+        items.clear();
+        items.addAll(filteredItems);
+        sparesArrayAdapter.notifyDataSetChanged();
 
     }
 
-    public int readFromSharedPreference(){
-        int value = 0;
+    public void sortFromLowToHigh(){
+        ArrayList<Spares> filteredItems = new ArrayList<>();
+        int minimumValue = 0;
 
-        //read value stored in SharedPreferences local storage
+        for(Spares spares:items){
+            if(Integer.parseInt(spares.getPrice()) < minimumValue){
+                filteredItems.add(0,spares);
+            }else{
+                filteredItems.add(spares);
+            }
+            minimumValue = Integer.parseInt(spares.getPrice());
+        }
 
-        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-        value = sharedPreferences.getInt("NUMBER OF ITEMS",0);
+        items.clear();
+        items.addAll(filteredItems);
+        sparesArrayAdapter.notifyDataSetChanged();
+    }
 
-        return value;
+    public void sortFromHighToLow(){
+        ArrayList<Spares> filteredItems = new ArrayList<>();
+        int maximumValue = 0;
+
+        for(Spares spares:items){
+            if(Integer.parseInt(spares.getPrice()) > maximumValue){
+                filteredItems.add(0,spares);
+            }else{
+                filteredItems.add(spares);
+            }
+            maximumValue = Integer.parseInt(spares.getPrice());
+        }
+
+        items.clear();
+        items.addAll(filteredItems);
+        sparesArrayAdapter.notifyDataSetChanged();
     }
 
 }
